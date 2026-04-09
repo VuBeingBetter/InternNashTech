@@ -8,11 +8,11 @@ public class BankAccount
     public AccountStatus Status { get; set; } = AccountStatus.ACTIVE;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-    public BankAccount(string accountNumber, string ownerName, decimal initialBalance)
+    public BankAccount(string accountNumber, string ownerName, decimal balance)
     {
         AccountNumber = accountNumber;
         OwnerName = ownerName;
-        Balance = initialBalance;
+        Balance = balance;
     }
 
     public override string ToString()

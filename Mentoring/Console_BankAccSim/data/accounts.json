@@ -1,1 +1,1 @@
-"data\\accounts.json"
+[{"AccountNumber":"1000","OwnerName":"Vu 1","Balance":1226,"Status":0,"CreatedAt":"2026-04-09T14:11:29.356853+07:00"},{"AccountNumber":"1001","OwnerName":"Vu 2","Balance":294,"Status":0,"CreatedAt":"2026-04-09T14:12:06.1339896+07:00"}]

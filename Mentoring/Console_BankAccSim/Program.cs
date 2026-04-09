@@ -58,11 +58,14 @@ void LoadAccountsFromFile()
     catch (JsonException)
     {
         accounts = [];
+        Console.WriteLine("Error: Cannot read JSON!");
+        Enter();
         SaveAccountsToFile();
     }
     catch (Exception ex)
     {
         Console.WriteLine("Unexpected error: " + ex.Message);
+        Enter();
     }
 }
 
@@ -76,8 +79,8 @@ void SaveAccountsToFile()
     try
     {
         using FileStream outputStream = File.Create(accountsFileName);
-        JsonSerializer.Serialize(outputStream, accountsFileName);
-        Console.WriteLine($"Accounts saved!");
+        JsonSerializer.Serialize(outputStream, accounts);
+        Console.WriteLine("Accounts saved!");
     }
 
     catch (Exception ex)
@@ -114,9 +117,9 @@ void Enter()
 
 bool CheckAccountExistByNumber(string accountNumber)
 {
-    if (FindAccountByNumber(accountNumber) != null)
+    if (FindAccountByNumber(accountNumber) == null)
     {
-        Console.WriteLine("Error: Account already exists!");
+        Console.WriteLine("Error: Account not exists!");
         return false;
     }
     return true;
@@ -371,10 +374,8 @@ void Transfer()
     SaveAccountsToFile();
     Console.WriteLine("Withdraw successful!");
     newTransaction.ToString();
-    Console.Write(">> Sender: ");
-    sender.ToString();
-    Console.Write(">> Recipient: ");
-    recipient.ToString();
+    Console.Write($">> Sender: {sender.ToString()}\n");
+    Console.Write($">> Recipient: {recipient.ToString()}\n");
     SaveAccountsToFile();
 }
 
@@ -415,6 +416,9 @@ void ViewTransactionHistory()
         return;
     }
 
+    BankAccount account = FindAccountByNumber(accountNumber);
+    if (!CheckAccountStatus(account)) return;
+
     bool invalidChoice = false;
     do
     {
@@ -429,27 +433,28 @@ void ViewTransactionHistory()
 
         switch (choice)
         {
-            case "1": ViewTransactionHistoryByType(null); break;
-            case "2": ViewTransactionHistoryByType(TransactionType.DEPOSIT); break;
-            case "3": ViewTransactionHistoryByType(TransactionType.WITHDRAW); break;
-            case "4": ViewTransactionHistoryByType(TransactionType.TRANSFER); break;
+            case "1": ViewTransactionHistoryByType(null, account); break;
+            case "2": ViewTransactionHistoryByType(TransactionType.DEPOSIT, account); break;
+            case "3": ViewTransactionHistoryByType(TransactionType.WITHDRAW, account); break;
+            case "4": ViewTransactionHistoryByType(TransactionType.TRANSFER, account); break;
             default: Console.WriteLine("Invalid choice!"); invalidChoice = true; break;
         }
     } while(invalidChoice);
     
 }
 
-void ViewTransactionHistoryByType(TransactionType? type)
+void ViewTransactionHistoryByType(TransactionType? type, BankAccount account)
 {
-    var filteredTypes = type == null
-        ? transactions
-        : transactions.Where(n => n.Type == type).ToList();
+    var filteredTypes = transactions.Where(t => 
+        (t.AccountNumber == account.AccountNumber) &&
+        (type == null || t.Type == type)
+    ).ToList();
 
     if (!filteredTypes.Any())
     {
         Console.WriteLine(type == null
-            ? "No notes found."
-            : $"No notes found with Type: '{type.ToString()}'"
+            ? "No transactions found."
+            : $"No transactions found with Type: '{type.ToString()}'"
         );
         return;
     }
