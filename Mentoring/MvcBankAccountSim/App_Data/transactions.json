@@ -1,0 +1,42 @@
+[
+  {
+    "Id": 1,
+    "AccountNumber": "ACC-1000",
+    "Type": 0,
+    "Amount": 500,
+    "CreatedAt": "2026-04-13T08:30:00.6517547+07:00",
+    "Description": ""
+  },
+  {
+    "Id": 2,
+    "AccountNumber": "ACC-1000",
+    "Type": 2,
+    "Amount": 100,
+    "CreatedAt": "2026-04-13T08:33:51.8020664+07:00",
+    "Description": "Transfer to ACC-1001"
+  },
+  {
+    "Id": 3,
+    "AccountNumber": "ACC-1001",
+    "Type": 2,
+    "Amount": 100,
+    "CreatedAt": "2026-04-13T08:33:51.8022347+07:00",
+    "Description": "Transfer from ACC-1000"
+  },
+  {
+    "Id": 4,
+    "AccountNumber": "ACC-1002",
+    "Type": 0,
+    "Amount": 1000,
+    "CreatedAt": "2026-04-13T08:36:11.2139741+07:00",
+    "Description": ""
+  },
+  {
+    "Id": 5,
+    "AccountNumber": "ACC-1002",
+    "Type": 1,
+    "Amount": 50,
+    "CreatedAt": "2026-04-13T08:36:46.097861+07:00",
+    "Description": ""
+  }
+]

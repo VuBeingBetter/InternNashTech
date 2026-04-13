@@ -1,0 +1,36 @@
+@model IEnumerable<Transaction>
+@{
+    var account = ViewBag.Account as BankAccount;
+}
+
+<h2>Transaction History for @account.AccountNumber</h2>
+<p>Current Balance: <strong>@account.Balance.ToString("C")</strong></p>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var t in Model)
+        {
+            // Logic to determine color and sign based on Type
+            bool isOut = (t.Type == TransactionType.WITHDRAW || 
+                         (t.Type == TransactionType.TRANSFER && t.Description.Contains("to")));
+            
+            <tr class="@(isOut ? "table-light" : "")">
+                <td>@t.CreatedAt.ToString("g")</td>
+                <td>@t.Type</td>
+                <td class="@(isOut ? "text-danger" : "text-success")">
+                    @(isOut ? "-" : "+")@t.Amount.ToString("C")
+                </td>
+                <td>@t.Description</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a asp-controller="Account" asp-action="Index" class="btn btn-secondary">Back to List</a>
