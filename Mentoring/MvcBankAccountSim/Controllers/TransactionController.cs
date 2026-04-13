@@ -21,8 +21,12 @@ public class TransactionController : Controller
         return View(transactions);
     }
 
-    public IActionResult Deposit()
+    public IActionResult Deposit(string accountNumber)
     {
+        var account = _accountService.GetAccountByNumber(accountNumber);
+        if (account == null) return NotFound();
+
+        ViewBag.Account = account;
         return View();
     }
 
@@ -54,11 +58,16 @@ public class TransactionController : Controller
         };
         _transactionService.Add(transaction);
 
-        return RedirectToAction("Index", "Account");
+        // After success:
+        return RedirectToAction("Details", "Account", new { accountNumber = accountNumber });
     }
 
-    public IActionResult Withdraw()
+    public IActionResult Withdraw(string accountNumber)
     {
+        var account = _accountService.GetAccountByNumber(accountNumber);
+        if (account == null) return NotFound();
+
+        ViewBag.Account = account;
         return View();
     }
 
@@ -109,11 +118,16 @@ public class TransactionController : Controller
         };
         _transactionService.Add(transaction);
 
-        return RedirectToAction("Index", "Account");
+        // After success:
+        return RedirectToAction("Details", "Account", new { accountNumber = accountNumber });
     }
 
-    public IActionResult Transfer()
+    public IActionResult Transfer(string fromAccountNumber)
     {
+        var account = _accountService.GetAccountByNumber(fromAccountNumber);
+        if (account == null) return NotFound();
+
+        ViewBag.FromAccount = account;
         return View();
     }
 
@@ -173,6 +187,7 @@ public class TransactionController : Controller
         _transactionService.Add(transactionOut);
         _transactionService.Add(transactionIn);
 
-        return RedirectToAction("Index", "Account");
+        // After success:
+        return RedirectToAction("Details", "Account", new { accountNumber = fromAccountNumber });
     }
 }

@@ -76,4 +76,13 @@ public class AccountController : Controller
         }
         return RedirectToAction("Index");
     }
+
+    [HttpGet]
+    public IActionResult GetOwnerName(string accountNumber)
+    {
+        var account = _accountService.GetAccountByNumber(accountNumber);
+        if (account == null) return Json(new { found = false });
+        
+        return Json(new { found = true, name = account.OwnerName });
+    }
 }
