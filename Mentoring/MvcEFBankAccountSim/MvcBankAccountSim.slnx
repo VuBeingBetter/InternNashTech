@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/MvcBankAccountSim.API/">
+    <Project Path="MvcBankAccountSim.API/MvcBankAccountSim.csproj" />
+  </Folder>
+  <Project Path="MvcBankAccountSim.Application/MvcBankAccountSim.Application.csproj" />
+  <Project Path="MvcBankAccountSim.Domain/MvcBankAccountSim.Domain.csproj" />
+  <Project Path="MvcBankAccountSim.Infrastructure/MvcBankAccountSim.Infrastructure.csproj" />
+</Solution>
