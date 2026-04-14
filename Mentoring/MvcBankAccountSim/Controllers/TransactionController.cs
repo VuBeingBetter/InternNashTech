@@ -11,13 +11,20 @@ public class TransactionController : Controller
         _accountService = accountService;
     }
 
-    public IActionResult History(string accountNumber)
+    public IActionResult History(string accountNumber, string filter = "all")
     {
         var account = _accountService.GetAccountByNumber(accountNumber);
         if (account == null) return NotFound();
 
         var transactions = _transactionService.GetTransactionsByAccountNumber(accountNumber);
+
+        if (!string.IsNullOrWhiteSpace(filter) && filter.ToLower() != "all")
+        {
+            transactions = transactions.Where(t => t.Type.ToString().Equals(filter, StringComparison.OrdinalIgnoreCase)).ToList();  
+        }
+
         ViewBag.Account = account;
+        ViewBag.Filter = filter;
         return View(transactions);
     }
 

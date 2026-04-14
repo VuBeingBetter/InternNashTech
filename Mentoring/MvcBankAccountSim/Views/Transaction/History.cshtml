@@ -1,39 +1,64 @@
 @model IEnumerable<Transaction>
 @{
     var account = ViewBag.Account as BankAccount;
+    string currentFilter = ViewBag.CurrentFilter ?? "All";
+    ViewData["Title"] = "Transaction History";
 }
 
-<h2>Transaction History for @(account?.AccountNumber)</h2>
-<p>Current Balance: <strong>@(account?.Balance.ToString("C"))</strong></p>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>History for @account?.AccountNumber</h2>
+        <a asp-controller="Account" asp-action="Details" asp-route-accountNumber="@account?.AccountNumber" class="btn btn-outline-secondary">Back to Account</a>
+    </div>
 
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Type</th>
-            <th>Amount</th>
-            <th>Description</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var t in Model)
-        {
-            // Logic to determine color and sign based on Type
-            bool isOut = (t.Type == TransactionType.WITHDRAW ||
-                         (t.Type == TransactionType.TRANSFER
-                         && t.Description != null
-                         && t.Description.Contains("to")));
-            
-            <tr class="@(isOut ? "table-light" : "")">
-                <td>@(t?.CreatedAt.ToString("g"))</td>
-                <td>@(t?.Type)</td>
-                <td class="@(isOut ? "text-danger" : "text-success")">
-                    @(isOut ? "-" : "+")@t.Amount.ToString("C")
-                </td>
-                <td>@t.Description</td>
+    <div class="btn-group mb-4" role="group" aria-label="Transaction Filters">
+        <a asp-action="History" asp-route-accountNumber="@account?.AccountNumber" asp-route-filter="All" 
+           class="btn @(currentFilter == "All" ? "btn-primary" : "btn-outline-primary")">All</a>
+        
+        <a asp-action="History" asp-route-accountNumber="@account?.AccountNumber" asp-route-filter="DEPOSIT" 
+           class="btn @(currentFilter == "DEPOSIT" ? "btn-primary" : "btn-outline-primary")">Deposits</a>
+        
+        <a asp-action="History" asp-route-accountNumber="@account?.AccountNumber" asp-route-filter="WITHDRAW" 
+           class="btn @(currentFilter == "WITHDRAW" ? "btn-primary" : "btn-outline-primary")">Withdrawals</a>
+        
+        <a asp-action="History" asp-route-accountNumber="@account?.AccountNumber" asp-route-filter="TRANSFER" 
+           class="btn @(currentFilter == "TRANSFER" ? "btn-primary" : "btn-outline-primary")">Transfers</a>
+    </div>
+
+    <table class="table table-hover shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Description</th>
             </tr>
-        }
-    </tbody>
-</table>
-<a asp-controller="Account" asp-action="Details" asp-route-accountNumber="@(account?.AccountNumber)"
-   class="btn btn-secondary">Back</a>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="4" class="text-center text-muted">No @currentFilter.ToLower() transactions found.</td>
+                </tr>
+            }
+            @foreach (var t in Model.OrderByDescending(x => x.CreatedAt))
+            {
+                // Logic to determine sign based on your preference (Withdraw/Transfer Out = Red)
+                bool isNegative = t.Type == TransactionType.WITHDRAW || (t.Type == TransactionType.TRANSFER && t.Description.Contains("to"));
+                
+                <tr>
+                    <td>@t.CreatedAt.ToString("g")</td>
+                    <td>
+                        <span class="badge @(t.Type == TransactionType.DEPOSIT ? "bg-success" : t.Type == TransactionType.WITHDRAW ? "bg-danger" : "bg-primary")">
+                            @t.Type
+                        </span>
+                    </td>
+                    <td class="@(isNegative ? "text-danger" : "text-success") fw-bold">
+                        @(isNegative ? "-" : "+")@t.Amount.ToString("C")
+                    </td>
+                    <td>@t.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
