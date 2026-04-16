@@ -44,7 +44,8 @@
             @foreach (var t in Model.OrderByDescending(x => x.CreatedAt))
             {
                 // Logic to determine sign based on your preference (Withdraw/Transfer Out = Red)
-                bool isNegative = t.Type == TransactionType.WITHDRAW || (t.Type == TransactionType.TRANSFER && t.Description.Contains("to"));
+                bool isNegative = t.Type == TransactionType.WITHDRAW || 
+                                (t.Type == TransactionType.TRANSFER && !string.IsNullOrWhiteSpace(t.Description) && t.Description.Contains("to", StringComparison.OrdinalIgnoreCase));
                 
                 <tr>
                     <td>@t.CreatedAt.ToString("g")</td>

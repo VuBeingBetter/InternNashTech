@@ -2,6 +2,8 @@ namespace MvcBankAccountSim.Infrastructure.Data;
 
 using MvcBankAccountSim.Domain.Entities;
 using MvcBankAccountSim.Domain.Enums;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 public class AppDbContext : DbContext
 {
@@ -23,7 +25,7 @@ public class AppDbContext : DbContext
                 OwnerName = "Initial Admin", 
                 Balance = 500.00m, 
                 Status = AccountStatus.ACTIVE, 
-                CreatedAt = DateTime.Now 
+                CreatedAt = new DateTime(2026, 4, 16) 
             }
         );
     }

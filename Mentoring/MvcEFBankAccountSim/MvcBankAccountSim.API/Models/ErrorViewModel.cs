@@ -1,4 +1,4 @@
-namespace MvcBankAccountSim.Models;
+namespace MvcBankAccountSim.API.Models;
 
 public class ErrorViewModel
 {

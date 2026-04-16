@@ -1,4 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using MvcBankAccountSim.Application.Interfaces;
+using MvcBankAccountSim.Domain.Entities;
+using MvcBankAccountSim.Domain.Enums;
+
+namespace MvcBankAccountSim.API.Controllers;
+
 
 public class AccountController : Controller
 {
@@ -9,9 +16,9 @@ public class AccountController : Controller
         _accountService = accountService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var accounts = _accountService.GetAllAccounts();
+        var accounts = await _accountService.GetAllAccountsAsync();
         return View(accounts);
     }
 
@@ -21,24 +28,26 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public IActionResult Create(string accountNumber, string ownerName, decimal balance)
+    public async Task<IActionResult> Create(string ownerName, decimal balance)
     {
         // 1. Manually check if the basic inputs are valid
-        if (string.IsNullOrEmpty(accountNumber) || string.IsNullOrEmpty(ownerName))
+        if (string.IsNullOrWhiteSpace(ownerName))
         {
-            ModelState.AddModelError("", "Account Number and Owner Name are required.");
+            ModelState.AddModelError("", "Owner Name is required.");
+            return View();
+        }
+        if (balance < 100)
+        {
+            ModelState.AddModelError("", "Initial Balance cannot be less than 100.");
             return View();
         }
 
         try
         {
-            // 2. Use your constructor! This is the ONLY way to set a 'private set' 
-            // property during the creation process from a form.
-            var newAccount = new BankAccount(accountNumber, ownerName, balance);
-
-            _accountService.Add(newAccount);
-            return RedirectToAction("Index");
+            await _accountService.CreateAccountAsync(ownerName, balance);
+            return RedirectToAction(nameof(Index));
         }
+        
         catch (Exception ex)
         {
             // Scenario: Duplicate account number
@@ -46,43 +55,43 @@ public class AccountController : Controller
             return View();
         }
     }
-    public IActionResult Details(string accountNumber)
+    public async Task<IActionResult> Details(string accountNumber)
     {
-        var account = _accountService.GetAccountByNumber(accountNumber);
+        if (string.IsNullOrWhiteSpace(accountNumber)) return NotFound();
+        var account = await _accountService.GetAccountByNumberAsync(accountNumber);
         if (account == null) return NotFound();
+        ViewBag.Account = account;
         return View(account);
     }
 
     [HttpPost]
-    public IActionResult Freeze(string accountNumber)
+    public async Task<IActionResult> ToggleStatus(string accountNumber)
     {
-        var account = _accountService.GetAccountByNumber(accountNumber);
-        if (account != null)
+        try
         {
-            account.ChangeStatus(AccountStatus.FROZEN);
-            _accountService.Update(account);
+            await _accountService.ToggleStatusAsync(accountNumber);
         }
-        return RedirectToAction("Index");
-    }
-
-    [HttpPost]
-    public IActionResult Unfreeze(string accountNumber)
-    {
-        var account = _accountService.GetAccountByNumber(accountNumber);
-        if (account != null)
+        catch (Exception ex)
         {
-            account.ChangeStatus(AccountStatus.ACTIVE);
-            _accountService.Update(account);
+            ModelState.AddModelError("", ex.Message);
         }
-        return RedirectToAction("Index");
+        return RedirectToAction(nameof(Index));
     }
 
     [HttpGet]
-    public IActionResult GetOwnerName(string accountNumber)
+    public async Task<IActionResult> GetOwnerName(string accountNumber)
     {
-        var account = _accountService.GetAccountByNumber(accountNumber);
-        if (account == null) return Json(new { found = false });
+        if (string.IsNullOrWhiteSpace(accountNumber))
+            return BadRequest();
+
+        var account = await _accountService.GetAccountByNumberAsync(accountNumber);
         
+        if (account == null)
+        {
+            return Json(new { found = false }); 
+        }
+
+        // Trả về JSON để JavaScript ở View có thể đọc được
         return Json(new { found = true, name = account.OwnerName });
     }
 }

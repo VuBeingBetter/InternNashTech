@@ -1,3 +1,4 @@
+using MvcBankAccountSim.Domain.Entities;
 namespace MvcBankAccountSim.Application.Interfaces;
 
 public interface IAccountService

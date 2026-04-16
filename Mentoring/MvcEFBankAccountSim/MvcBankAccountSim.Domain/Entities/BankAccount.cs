@@ -1,3 +1,5 @@
+using MvcBankAccountSim.Domain.Enums;
+
 namespace MvcBankAccountSim.Domain.Entities;
 
 public class BankAccount

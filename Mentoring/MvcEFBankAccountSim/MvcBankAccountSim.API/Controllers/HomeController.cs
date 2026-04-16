@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using MvcBankAccountSim.Models;
+using MvcBankAccountSim.API.Models;
 
-namespace MvcBankAccountSim.Controllers;
+namespace MvcBankAccountSim.API.Controllers;
 
 public class HomeController : Controller
 {

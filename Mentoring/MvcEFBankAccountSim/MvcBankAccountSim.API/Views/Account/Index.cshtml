@@ -28,8 +28,7 @@
                 <td>
                     <a asp-action="Details" asp-route-accountNumber="@item.AccountNumber" class="btn btn-sm btn-info">Details</a>
                     
-                    <form asp-action="@(item.Status == AccountStatus.ACTIVE ? "Freeze" : "Unfreeze")" 
-                          method="post" style="display:inline">
+                    <form asp-action="ToggleStatus" method="post" style="display:inline">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="accountNumber" value="@item.AccountNumber" />
                         <button type="submit" class="btn btn-sm @(item.Status == AccountStatus.ACTIVE ? "btn-warning" : "btn-success")">

@@ -1,22 +1,31 @@
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 
+using MvcBankAccountSim.Infrastructure.Data;
+using MvcBankAccountSim.Infrastructure.Repositories;
+using MvcBankAccountSim.Application.Interfaces;
+using MvcBankAccountSim.Application.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Đăng ký DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-    // 3. Đăng ký Repository và Unit of Work (Scope: Scoped)
+// Đăng ký Repository (Dùng Interface từ Domain, Thực thi từ Infrastructure)
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
-// builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // Nếu bạn đã tạo UOW
 
-// 4. Đăng ký Services mới (Thay thế cho JsonAccountService)
+// QUAN TRỌNG: Bạn nên dùng Unit of Work để quản lý giao dịch
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); 
+
+// Đăng ký Services (Dùng Interface từ Application.Interfaces, Thực thi từ Application.Services)
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
+
 
 var cultureInfo = new CultureInfo("en-US");
 CultureInfo.DefaultThreadCurrentCulture = cultureInfo;

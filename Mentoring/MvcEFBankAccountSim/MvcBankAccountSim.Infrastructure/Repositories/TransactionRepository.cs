@@ -1,3 +1,9 @@
+using Microsoft.EntityFrameworkCore;
+using MvcBankAccountSim.Application.Interfaces;
+using MvcBankAccountSim.Domain.Entities;
+using MvcBankAccountSim.Infrastructure.Data;
+
+
 namespace MvcBankAccountSim.Infrastructure.Repositories;
 
 public class TransactionRepository : Repository<Transaction>, ITransactionRepository

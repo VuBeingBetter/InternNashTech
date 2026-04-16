@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MvcBankAccountSim.Domain\MvcBankAccountSim.Domain.csproj" />
+    <ProjectReference Include="..\MvcBankAccountSim.Application\MvcBankAccountSim.Application.csproj" />
   </ItemGroup>
 
 </Project>

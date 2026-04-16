@@ -1,4 +1,4 @@
-namespace MvcBankAccountSim.Domain.Interfaces;
+namespace MvcBankAccountSim.Application.Interfaces;
 
 public interface IUnitOfWork : IDisposable
 {

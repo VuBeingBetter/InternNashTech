@@ -1,3 +1,7 @@
+using MvcBankAccountSim.Application.Interfaces;
+using MvcBankAccountSim.Domain.Entities;
+using MvcBankAccountSim.Domain.Enums;
+
 namespace MvcBankAccountSim.Application.Services;
 
 public class AccountService : IAccountService
@@ -7,6 +11,15 @@ public class AccountService : IAccountService
     public AccountService(IUnitOfWork uow)
     {
         _uow = uow;
+    }
+
+    public async Task CreateAccountAsync(string ownerName, decimal initialBalance)
+    {
+        string newAccNumber = await GenerateUniqueAccountNumberAsync();
+        var account = new BankAccount(newAccNumber, ownerName, initialBalance);
+        
+        await _uow.Accounts.AddAsync(account);
+        await _uow.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<BankAccount>> GetAllAccountsAsync() 

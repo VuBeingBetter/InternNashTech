@@ -1,3 +1,7 @@
+using MvcBankAccountSim.Application.Interfaces;
+using MvcBankAccountSim.Domain.Entities;
+using MvcBankAccountSim.Domain.Enums;
+
 namespace MvcBankAccountSim.Application.Services;
 
 public class TransactionService : ITransactionService
