@@ -3,4 +3,5 @@
   <Project Path="MvcBankAccountSim.Application/MvcBankAccountSim.Application.csproj" />
   <Project Path="MvcBankAccountSim.Domain/MvcBankAccountSim.Domain.csproj" />
   <Project Path="MvcBankAccountSim.Infrastructure/MvcBankAccountSim.Infrastructure.csproj" />
+  <Project Path="MvcBankAccountSim.Tests/MvcBankAccountSim.Tests.csproj" />
 </Solution>

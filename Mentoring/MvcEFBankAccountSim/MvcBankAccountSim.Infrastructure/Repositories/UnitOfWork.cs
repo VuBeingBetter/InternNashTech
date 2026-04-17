@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MvcBankAccountSim.Application.Interfaces;
 using MvcBankAccountSim.Infrastructure.Data;
-using MvcBankAccountSim.Infrastructure.Repositories;
 
 namespace MvcBankAccountSim.Infrastructure.Repositories;
 public class UnitOfWork : IUnitOfWork

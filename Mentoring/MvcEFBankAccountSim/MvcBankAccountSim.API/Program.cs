@@ -5,6 +5,9 @@ using MvcBankAccountSim.Infrastructure.Data;
 using MvcBankAccountSim.Infrastructure.Repositories;
 using MvcBankAccountSim.Application.Interfaces;
 using MvcBankAccountSim.Application.Services;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using MvcBankAccountSim.Application.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,10 @@ builder.Services.AddControllersWithViews();
 // Đăng ký DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<BankAccountValidator>(); // Tự động đăng ký tất cả validator trong assembly chứa AccountService
+builder.Services.AddValidatorsFromAssemblyContaining<TransactionValidator>(); // Tự động đăng ký tất cả validator trong assembly chứa TransactionService
 
 // Đăng ký Repository (Dùng Interface từ Domain, Thực thi từ Infrastructure)
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();

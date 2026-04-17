@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using MvcBankAccountSim.Application.DTOs;
 using MvcBankAccountSim.Application.Interfaces;
 using MvcBankAccountSim.Domain.Entities;
-using MvcBankAccountSim.Domain.Enums;
 
 namespace MvcBankAccountSim.API.Controllers;
 
@@ -28,23 +27,18 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(string ownerName, decimal balance)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(CreateAccountRequest request)
     {
         // 1. Manually check if the basic inputs are valid
-        if (string.IsNullOrWhiteSpace(ownerName))
+        if (!ModelState.IsValid)
         {
-            ModelState.AddModelError("", "Owner Name is required.");
-            return View();
-        }
-        if (balance < 100)
-        {
-            ModelState.AddModelError("", "Initial Balance cannot be less than 100.");
-            return View();
+            return View(request);
         }
 
         try
         {
-            await _accountService.CreateAccountAsync(ownerName, balance);
+            await _accountService.CreateAccountAsync(request.OwnerName, request.Balance);
             return RedirectToAction(nameof(Index));
         }
         
@@ -52,7 +46,7 @@ public class AccountController : Controller
         {
             // Scenario: Duplicate account number
             ModelState.AddModelError("AccountNumber", ex.Message);
-            return View();
+            return View(request);
         }
     }
     public async Task<IActionResult> Details(string accountNumber)

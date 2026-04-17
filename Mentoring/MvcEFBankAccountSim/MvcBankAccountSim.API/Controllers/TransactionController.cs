@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using MvcBankAccountSim.Application.Interfaces;
-using MvcBankAccountSim.Domain.Entities;
-using MvcBankAccountSim.Domain.Enums;
 
 namespace MvcBankAccountSim.API.Controllers;
 
@@ -42,17 +40,23 @@ public class TransactionController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Deposit(string accountNumber, decimal amount)
+    public async Task<IActionResult> Deposit(DepositRequest request)
     {
+        if (!ModelState.IsValid)
+        {
+            var account = await _accountService.GetAccountByNumberAsync(request.AccountNumber);
+            ViewBag.Account = account;
+            return View(request);
+        }
         try
         {
-            await _accountService.DepositAsync(accountNumber, amount);
-            return RedirectToAction("Details", "Account", new {accountNumber = accountNumber});
+            await _accountService.DepositAsync(request.AccountNumber, request.Amount);
+            return RedirectToAction("Details", "Account", new {accountNumber = request.AccountNumber});
         }
         catch (Exception ex)
         {
             ModelState.AddModelError("", ex.Message);
-            var account = await _accountService.GetAccountByNumberAsync(accountNumber);
+            var account = await _accountService.GetAccountByNumberAsync(request.AccountNumber);
             ViewBag.Account = account;
             return View();
         }
@@ -68,17 +72,23 @@ public class TransactionController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Withdraw(string accountNumber, decimal amount)
-    {        
+    public async Task<IActionResult> Withdraw(WithdrawRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            var account = await _accountService.GetAccountByNumberAsync(request.AccountNumber);
+            ViewBag.Account = account;
+            return View(request);
+        }       
         try
         {
-            await _accountService.WithdrawAsync(accountNumber, amount);
-            return RedirectToAction("Details", "Account", new { accountNumber = accountNumber });
+            await _accountService.WithdrawAsync(request.AccountNumber, request.Amount);
+            return RedirectToAction("Details", "Account", new { accountNumber = request.AccountNumber });
         }
         catch (Exception ex)
         {
             ModelState.AddModelError("", ex.Message);
-            var account = await _accountService.GetAccountByNumberAsync(accountNumber);
+            var account = await _accountService.GetAccountByNumberAsync(request.AccountNumber);
             ViewBag.Account = account;
             return View();
         }
@@ -94,18 +104,23 @@ public class TransactionController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Transfer(string fromAccountNumber, string toAccountNumber, decimal amount)
+    public async Task<IActionResult> Transfer(TransferRequest request)
     {
+        if (!ModelState.IsValid)
+        {
+            ViewBag.FromAccount = await _accountService.GetAccountByNumberAsync(request.FromAccountNumber);
+            return View(request);
+        }
         try
         {
             // Chuyển logic phức tạp này xuống Service để đảm bảo tính toàn vẹn (Transaction)
-            await _accountService.TransferAsync(fromAccountNumber, toAccountNumber, amount);
-            return RedirectToAction("Details", "Account", new { accountNumber = fromAccountNumber });
+            await _accountService.TransferAsync(request.FromAccountNumber, request.ToAccountNumber, request.Amount);
+            return RedirectToAction("Details", "Account", new { accountNumber = request.FromAccountNumber });
         }
         catch (Exception ex)
         {
             ModelState.AddModelError("", ex.Message);
-            var fromAccount = await _accountService.GetAccountByNumberAsync(fromAccountNumber);
+            var fromAccount = await _accountService.GetAccountByNumberAsync(request.FromAccountNumber);
             ViewBag.FromAccount = fromAccount;
             return View();
         }
