@@ -1,0 +1,34 @@
+# Build outputs
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# Test Results
+TestResults/
+*.trx
+*.coverage
+
+# Code Coverage Reports
+coveragereport/
+coverage.json
+*.opencover.xml
+
+# IDE artifacts
+.vscode/
+.vs/
+*.user
+*.suo
+*.sln.iml
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+
+# OS-specific files
+.DS_Store
+Thumbs.db

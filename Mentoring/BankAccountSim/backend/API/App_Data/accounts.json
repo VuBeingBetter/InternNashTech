@@ -1,0 +1,30 @@
+[
+  {
+    "AccountNumber": "ACC-1000",
+    "OwnerName": "Agemasen",
+    "Balance": 400,
+    "Status": 0,
+    "CreatedAt": "2026-04-13T08:27:44.4178918+07:00"
+  },
+  {
+    "AccountNumber": "ACC-1001",
+    "OwnerName": "Golshi",
+    "Balance": 500,
+    "Status": 0,
+    "CreatedAt": "2026-04-13T08:30:19.9391107+07:00"
+  },
+  {
+    "AccountNumber": "ACC-1002",
+    "OwnerName": "Teio",
+    "Balance": 600,
+    "Status": 0,
+    "CreatedAt": "2026-04-13T08:34:31.2764728+07:00"
+  },
+  {
+    "AccountNumber": "ACC-1003",
+    "OwnerName": "Lil Spica",
+    "Balance": 600,
+    "Status": 0,
+    "CreatedAt": "2026-04-13T08:37:03.467065+07:00"
+  }
+]

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <Exclude>[API]AspNetCoreGeneratedDocument.*</Exclude>
+          <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
+          <ExcludeByFile>**/Migrations/*.cs,**/Views/**/*.cshtml,**/*Program.cs,**/*DTOs/*.cs</ExcludeByFile>
+          
+          <IncludeDirectory>
+            <Directory>Application</Directory>
+            <Directory>Domain</Directory>
+            <Directory>API/Controllers</Directory>
+          </IncludeDirectory>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>
