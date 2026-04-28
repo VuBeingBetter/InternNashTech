@@ -64,6 +64,11 @@ public class AccountService : IAccountService
     public async Task DepositAsync(string accountNumber, decimal amount)
     {
         var account = await GetAndValidateAccount(accountNumber);
+
+        if (account.Status == AccountStatus.FROZEN) 
+        {
+            throw new Exception("Account is frozen. Cannot perform transactions.");
+        }
         account.Deposit(amount);
         
         await _uow.Transactions.AddAsync(new Transaction(accountNumber, TransactionType.DEPOSIT, amount, "Deposit cash"));
@@ -73,6 +78,11 @@ public class AccountService : IAccountService
     public async Task WithdrawAsync(string accountNumber, decimal amount)
     {
         var account = await GetAndValidateAccount(accountNumber);
+
+        if (account.Status == AccountStatus.FROZEN) 
+        {
+            throw new Exception("Account is frozen. Cannot perform transactions.");
+        }
 
         if (account.Balance - amount < 100)
             throw new InvalidOperationException("Balance must remain >= $100.");
@@ -89,8 +99,17 @@ public class AccountService : IAccountService
     public async Task TransferAsync(string fromAcc, string toAcc, decimal amount)
     {
         var source = await GetAndValidateAccount(fromAcc);
+
+        if (source.Status == AccountStatus.FROZEN) 
+        {
+            throw new Exception("Source account is frozen. Cannot perform transactions.");
+        }
         var destination = await _uow.Accounts.GetByAccountNumberAsync(toAcc) 
             ?? throw new Exception("Destination account not found.");
+        if (destination.Status == AccountStatus.FROZEN) 
+        {
+            throw new Exception("Destination account is frozen. Cannot perform transactions.");
+        }
 
         if (source.Balance - amount < 100)
             throw new InvalidOperationException("Insufficient funds to maintain minimum balance.");

@@ -26,18 +26,12 @@ public class TransactionController : ControllerBase
 
         var transactions = await _transactionService.GetHistoryAsync(accountNumber, filter);
 
-        var pageTransactions = transactions
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
-
         return Ok(new
         {
             Account = account,
-            Transactions = pageTransactions,
+            Transactions = transactions,
             CurrentPage = page,
             PageSize = pageSize,
-            TotalPages = (int)Math.Ceiling((double)transactions.Count() / pageSize),
             Filter = filter
         });
     }

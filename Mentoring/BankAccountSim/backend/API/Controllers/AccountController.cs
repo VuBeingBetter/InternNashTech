@@ -53,7 +53,7 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpGet("{accountNumber}/details")]
+    [HttpGet("{accountNumber}")]
     public async Task<IActionResult> Details(string accountNumber)
     {
         if (string.IsNullOrWhiteSpace(accountNumber)) return NotFound();

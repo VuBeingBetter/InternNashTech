@@ -8,6 +8,7 @@ using Application.Services;
 using FluentValidation.AspNetCore;
 using FluentValidation;
 using Application.Validators;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +27,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<TransactionValidator>(); //
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReact",
-        builder => builder.WithOrigins("http://localhost:3000") // Thay đổi nếu React app chạy ở cổng khác
+        builder => builder.WithOrigins("http://localhost:5173") // Thay đổi nếu React app chạy ở cổng khác
                           .AllowAnyHeader()
                           .AllowAnyMethod());
 });
@@ -42,6 +43,11 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 var cultureInfo = new CultureInfo("en-US");
 CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
