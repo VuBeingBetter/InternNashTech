@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="API/API.csproj" />
+  <Project Path="Customer/Customer.csproj" />
+  <Project Path="Domain/Domain.csproj" />
+  <Project Path="Persistence/Persistence.csproj" />
+  <Project Path="Shared/Shared.csproj" />
+</Solution>

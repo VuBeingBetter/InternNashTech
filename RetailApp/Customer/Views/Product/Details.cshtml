@@ -1,0 +1,67 @@
+@using Shared.ViewModels
+@model ProductDetailsViewModel
+
+<div class="container py-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Catalog</a></li>
+            <li class="breadcrumb-item active">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <div class="row g-5">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm p-3 bg-white sticky-top" style="top: 2rem;">
+                <img src="@(string.IsNullOrWhiteSpace(Model.ImageUrl) 
+                                ? "https://placehold.co/600x400?text=No+Image" 
+                                : $"http://localhost:5151/images/products/{Model.ImageUrl}")" 
+                     class="img-fluid rounded object-fit-contain" 
+                     style="max-height: 500px;" 
+                     alt="@Model.Name">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <span class="badge bg-secondary mb-2">@Model.CategoryName</span>
+            <h1 class="display-5 fw-bold mb-3">@Model.Name</h1>
+            <h2 class="text-primary fw-bold mb-4">@Model.Price.ToString("C")</h2>
+            
+            <div class="mb-4">
+                <h5 class="fw-bold">Status:</h5>
+                <p class="@(Model.StockQuantity > 0 ? "text-success" : "text-danger") fw-medium">
+                    @(Model.StockQuantity > 0 ? $"In Stock ({Model.StockQuantity} units)" : "Out of Stock")
+                </p>
+            </div>
+
+            <hr />
+
+            <h4 class="fw-bold mt-4 mb-3">Technical Specifications</h4>
+            @if (Model.Description != null && Model.Description.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover border">
+                        <tbody class="align-middle">
+                            @foreach (var spec in Model.Description)
+                            {
+                                <tr>
+                                    <th class="bg-light w-25" scope="row">@spec.Key</th>
+                                    <td>@spec.Value</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted italic">No specifications available for this product.</p>
+            }
+
+            <div class="d-grid gap-2 mt-5">
+                <button class="btn btn-primary btn-lg rounded-pill" type="button" @(Model.StockQuantity == 0 ? "disabled" : "")>
+                    Add to Cart
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

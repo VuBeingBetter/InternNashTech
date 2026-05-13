@@ -1,0 +1,53 @@
+@using Shared.ViewModels
+@model List<ProductCardViewModel>
+
+@{
+    ViewData["Title"] = "Product Catalog";
+}
+
+<div class="container py-5">
+    <h1 class="text-center mb-5 fw-bold">Product Catalog</h1>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        @foreach (var product in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm hover-shadow transition border-0">
+                    <div class="position-relative overflow-hidden" style="height: 250px; background: #f8f9fa;">
+                        <img src="@(string.IsNullOrWhiteSpace(product.ImageUrl) 
+                                ? "https://placehold.co/400x400?text=No+Image" 
+                                : $"http://localhost:5151/images/products/{product.ImageUrl}")" 
+                             class="card-img-top w-100 h-100 object-fit-contain p-3" 
+                             alt="@product.Name">
+                        <span class="position-absolute top-0 start-0 m-2 badge bg-primary">@product.CategoryName</span>
+                    </div>
+
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-truncate mb-2" title="@product.Name">@product.Name</h5>
+                        <p class="card-text text-primary fs-5 fw-bold mb-3">
+                            @product.Price.ToString("C")
+                        </p>
+                        <div class="mt-auto">
+                            <a asp-action="Details" asp-route-id="@product.Id" class="btn btn-outline-dark w-100 rounded-pill">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;
+    }
+    .transition {
+        transition: all 0.3s ease;
+    }
+    .object-fit-contain {
+        object-fit: contain;
+    }
+</style>
